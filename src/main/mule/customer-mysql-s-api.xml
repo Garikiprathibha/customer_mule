@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd 
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<flow name="customer-mysql-s-api-main">
+        <http:listener path="${http.path}" config-ref="HTTP_Listener_config">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="customer-mysql-s-api-config"/>
+		<error-handler ref="global-Error-HandlerError_Handler" />
+    </flow>
+    <flow name="get:\customers:customer-mysql-s-api-config">
+        <logger level="INFO" doc:name="Logger" doc:id="e90ab263-3ec6-4650-8614-f8c088e2e7d7" />
+		<flow-ref doc:name="Flow Reference" doc:id="8d196101-9f54-43e6-8deb-192676fed93b" name="getSub_Flow"/>
+		<logger level="INFO" doc:name="Logger" doc:id="9df7456f-82e3-469e-989e-fe7f7be20165" />
+		<error-handler ref="global-Error-HandlerError_Handler" />
+    </flow>
+    <flow name="post:\customers:application\json:customer-mysql-s-api-config">
+		<logger level="INFO" doc:name="Logger" doc:id="c3f73f81-e022-4815-beea-68aeb1f3a291" />
+		<flow-ref doc:name="Flow Reference" doc:id="f7c47ec9-13a6-4d6c-84d6-3cf47e58457a" name="postSub_Flow"/>
+		<logger level="INFO" doc:name="Logger" doc:id="89b6da5e-8e82-41f3-9667-58a822f72f87" />
+		<error-handler ref="global-Error-HandlerError_Handler" />
+    </flow>
+</mule>

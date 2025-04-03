@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<sub-flow name="getSub_Flow" doc:id="1c6a4b27-2243-48db-a587-f7fcb80d78d2" >
+		<ee:transform doc:name="Transform Message" doc:id="15d92847-0c1e-48f3-a246-3d1f6c23133b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+[
+  {
+    customerId: "IN-2025-0001",
+    firstName: "john",
+    lastName: "wesly",
+    email: "johnwesly@example.com",
+    phone: "9876543210",
+    billingStreet: "789 Pine Ln",
+    billingCity: "Hill Valley",
+    billingState: "CA",
+    billingPostalCode: "90210",
+    billingCountry: "USA",
+    industry: "Retail",
+    status: "active"
+  }
+] as Array {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+	<sub-flow name="postSub_Flow" doc:id="5e6813ea-fd44-4f77-a3ee-e03c4d68069e" >
+		<db:insert doc:name="Insertng the data to database" doc:id="9e9efae6-090e-45c3-ac5e-07c9efb03caa" config-ref="Database_Config1">
+			<db:sql ><![CDATA[INSERT INTO customer_sync_636(customerId, firstName, lastName, email, phone, billingStreet, billingCity, billingState, billingPostalCode, billingCountry, industry, status)
+         VALUES(:customerId, :firstName, :lastName, :email, :phone, :billingStreet, :billingCity, :billingState, :billingPostalCode, :billingCountry, :industry, :status)]]></db:sql>
+			<db:input-parameters ><![CDATA[#[payload]]]></db:input-parameters>
+		</db:insert>
+		<ee:transform doc:name="success response" doc:id="94703022-8373-46d4-af59-0837b6bfd1af" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  status: "success",
+  message: "customer created successfully"
+} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+</mule>

@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_1c6a4b27_2243_48db_a587_f7fcb80d78d2_Output_Payload = Array<{  firstName: String,   lastName: String,   phone: String,   billingStreet: String,   billingPostalCode: String,   customerId: String,   billingCountry: String,   industry: String,   billingState: String,   email: String,   billingCity: String,   status: String,   _?: Any}>
+

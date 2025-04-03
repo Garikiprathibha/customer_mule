@@ -1,0 +1,18 @@
+%dw 2.0
+
+type auto_5e6813ea_fd44_4f77_a3ee_e03c4d68069e_Input_Payload = {
+  firstName: String, 
+  lastName: String, 
+  phone: String, 
+  billingStreet: String, 
+  billingPostalCode: String, 
+  customerId: String, 
+  billingCountry: String, 
+  industry: String, 
+  billingState: String, 
+  email: String, 
+  billingCity: String, 
+  status: String, 
+  _?: Any
+}
+
